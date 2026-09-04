@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Authentication
+
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register.form');
 
@@ -24,11 +24,21 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-Route::middleware('auth')->group(function () {
+
+
+//student
+Route::middleware(['auth', 'role:student'])->group(function () {
 
     Route::get('/student/dashboard', function () {
         return view('student.dashboard');
     })->name('student.dashboard');
+
+});
+
+
+
+//owner
+Route::middleware(['auth', 'role:owner'])->group(function () {
 
     Route::get('/owner/dashboard', function () {
         return view('owner.dashboard');
