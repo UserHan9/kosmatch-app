@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KostController;
+use App\Http\Controllers\RoomController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,3 +48,30 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     })->name('owner.dashboard');
 
 });
+
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('owner.dashboard');
+    })->name('dashboard');
+
+    Route::resource('kosts', KostController::class);
+});
+
+// OWNER
+Route::middleware(['auth', 'role:owner'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+
+        Route::get('/dashboard', function () {
+            return view('owner.dashboard');
+        })->name('dashboard');
+
+        Route::resource('kosts', KostController::class);
+
+        Route::resource('kosts.rooms', RoomController::class)
+            ->except(['show']);
+    });
+
+    Route::resource('kosts', KostController::class);
