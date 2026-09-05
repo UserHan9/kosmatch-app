@@ -212,7 +212,7 @@
 
 <div class="app">
 
-    <!-- ===== SIDEBAR ===== -->
+    
     <aside class="sidebar">
         <div class="sidebar-logo">
             <span class="logo-icon"><i class="fa-solid fa-house"></i></span>
@@ -261,7 +261,7 @@
         </ul>
     </aside>
 
-    <!-- ===== MAIN ===== -->
+    
     <div class="main">
 
         <!-- ===== NAVBAR ===== -->
@@ -289,7 +289,7 @@
             </div>
         </header>
 
-        <!-- ===== CONTENT (beda-beda tiap halaman) ===== -->
+        
         <main class="content">
             @yield('content')
         </main>

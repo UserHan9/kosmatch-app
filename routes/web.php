@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\StudentKostController;
 
 
 Route::get('/', function () {
@@ -36,6 +38,36 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         return view('student.dashboard');
     })->name('student.dashboard');
 
+});
+
+Route::middleware(['auth','role:student'])->group(function () {
+
+    Route::get('/student/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+
+
+    // BOOKING STUDENT
+
+    Route::get(
+        '/student/bookings',
+        [BookingController::class, 'index']
+    )->name('student.bookings.index');
+
+    Route::get(
+        '/student/rooms/{room}/book',
+        [BookingController::class, 'create']
+    )->name('student.bookings.create');
+
+    Route::post(
+        '/student/rooms/{room}/book',
+        [BookingController::class, 'store']
+    )->name('student.bookings.store');
+
+    Route::get(
+        '/student/bookings/{booking}',
+        [BookingController::class, 'show']
+    )->name('student.bookings.show');
 });
 
 
@@ -75,3 +107,47 @@ Route::middleware(['auth', 'role:owner'])
     });
 
     Route::resource('kosts', KostController::class);
+
+    Route::middleware([
+    'auth',
+    'role:student'
+])->group(function () {
+
+    Route::get('/student/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+
+
+    // KOST STUDENT
+    Route::get(
+        '/student/kosts',
+        [StudentKostController::class, 'index']
+    )->name('student.kosts.index');
+
+    Route::get(
+        '/student/kosts/{kost}',
+        [StudentKostController::class, 'show']
+    )->name('student.kosts.show');
+
+
+    // BOOKING
+    Route::get(
+        '/student/bookings',
+        [BookingController::class, 'index']
+    )->name('student.bookings.index');
+
+    Route::get(
+        '/student/rooms/{room}/book',
+        [BookingController::class, 'create']
+    )->name('student.bookings.create');
+
+    Route::post(
+        '/student/rooms/{room}/book',
+        [BookingController::class, 'store']
+    )->name('student.bookings.store');
+
+    Route::get(
+        '/student/bookings/{booking}',
+        [BookingController::class, 'show']
+    )->name('student.bookings.show');
+});
