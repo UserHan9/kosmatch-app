@@ -1,12 +1,17 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\StudentKostController;
 use App\Http\Controllers\MidtransController;
+use App\Http\Controllers\OwnerBookingController;
+use App\Http\Controllers\OwnerDashboardController;
+
+
 
 
 Route::get('/', function () {
@@ -32,130 +37,79 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 
 
-//student
-Route::middleware(['auth', 'role:student'])->group(function () {
 
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
+Route::middleware(['auth', 'role:student'])
+    ->group(function () {
 
-});
-
-Route::middleware(['auth','role:student'])->group(function () {
-
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
+       
+        Route::get('/student/dashboard', function () {
+            return view('student.dashboard');
+        })->name('student.dashboard');
 
 
-    // BOOKING STUDENT
+       
+        Route::get('/student/kosts', [StudentKostController::class, 'index'])
+            ->name('student.kosts.index');
 
-    Route::get(
-        '/student/bookings',
-        [BookingController::class, 'index']
-    )->name('student.bookings.index');
-
-    Route::get(
-        '/student/rooms/{room}/book',
-        [BookingController::class, 'create']
-    )->name('student.bookings.create');
-
-    Route::post(
-        '/student/rooms/{room}/book',
-        [BookingController::class, 'store']
-    )->name('student.bookings.store');
-
-    Route::get(
-        '/student/bookings/{booking}',
-        [BookingController::class, 'show']
-    )->name('student.bookings.show');
-});
+        Route::get('/student/kosts/{kost}', [StudentKostController::class, 'show'])
+            ->name('student.kosts.show');
 
 
+       
+        Route::get('/student/bookings', [BookingController::class, 'index'])
+            ->name('student.bookings.index');
 
-//owner
-Route::middleware(['auth', 'role:owner'])->group(function () {
+        Route::get('/student/rooms/{room}/book', [BookingController::class, 'create'])
+            ->name('student.bookings.create');
 
-    Route::get('/owner/dashboard', function () {
-        return view('owner.dashboard');
-    })->name('owner.dashboard');
+        Route::post('/student/rooms/{room}/book', [BookingController::class, 'store'])
+            ->name('student.bookings.store');
 
-});
+        Route::get('/student/bookings/{booking}', [BookingController::class, 'show'])
+            ->name('student.bookings.show');
 
-Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('owner.dashboard');
-    })->name('dashboard');
+        // ini midtrans token
+        Route::get(
+            '/student/bookings/{booking}/payment/token',
+            [MidtransController::class, 'createSnapToken']
+        )->name('student.bookings.payment.token');
+    });
 
-    Route::resource('kosts', KostController::class);
-});
 
-// OWNER
+
 Route::middleware(['auth', 'role:owner'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('owner.dashboard');
-        })->name('dashboard');
+       
+        Route::get('/dashboard', [OwnerDashboardController::class, 'index'])
+            ->name('dashboard');
 
+
+        
         Route::resource('kosts', KostController::class);
 
+
+        
         Route::resource('kosts.rooms', RoomController::class)
             ->except(['show']);
+
+
+        
+        Route::get('/bookings', [OwnerBookingController::class, 'index'])
+            ->name('bookings.index');
+
+        Route::get('/bookings/{booking}', [OwnerBookingController::class, 'show'])
+            ->name('bookings.show');
     });
 
-    Route::resource('kosts', KostController::class);
-
-    Route::middleware([
-    'auth',
-    'role:student'
-])->group(function () {
-
-    Route::get('/student/dashboard', function () {
-        return view('student.dashboard');
-    })->name('student.dashboard');
 
 
-    // KOST STUDENT
-    Route::get(
-        '/student/kosts',
-        [StudentKostController::class, 'index']
-    )->name('student.kosts.index');
 
-    Route::get(
-        '/student/kosts/{kost}',
-        [StudentKostController::class, 'show']
-    )->name('student.kosts.show');
-
-
-    // BOOKING
-    Route::get(
-        '/student/bookings',
-        [BookingController::class, 'index']
-    )->name('student.bookings.index');
-
-    Route::get(
-        '/student/rooms/{room}/book',
-        [BookingController::class, 'create']
-    )->name('student.bookings.create');
-
-    Route::post(
-        '/student/rooms/{room}/book',
-        [BookingController::class, 'store']
-    )->name('student.bookings.store');
-
-    Route::get(
-        '/student/bookings/{booking}',
-        [BookingController::class, 'show']
-    )->name('student.bookings.show');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get(
-        '/student/bookings/{booking}/payment/token',
-        [MidtransController::class, 'createSnapToken']
-    )->name('student.bookings.payment.token');
-});
+// midtrans webhook
+Route::post(
+    '/midtrans/notification',
+    [MidtransController::class, 'notification']
+)->name('midtrans.notification');
