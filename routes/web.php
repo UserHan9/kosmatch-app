@@ -6,6 +6,7 @@ use App\Http\Controllers\KostController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\StudentKostController;
+use App\Http\Controllers\MidtransController;
 
 
 Route::get('/', function () {
@@ -150,4 +151,11 @@ Route::middleware(['auth', 'role:owner'])
         '/student/bookings/{booking}',
         [BookingController::class, 'show']
     )->name('student.bookings.show');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get(
+        '/student/bookings/{booking}/payment/token',
+        [MidtransController::class, 'createSnapToken']
+    )->name('student.bookings.payment.token');
 });

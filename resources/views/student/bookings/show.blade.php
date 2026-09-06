@@ -8,6 +8,11 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+    <script
+    type="text/javascript"
+    src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('services.midtrans.client_key') }}"
+    ></script>
 
     <title>
         Detail Booking - KosMatch
@@ -106,35 +111,118 @@
 
 
         {{-- NANTI MIDTRANS --}}
-        @if ($booking->payment_status === 'pending')
+       @if ($booking->payment_status === 'pending')
 
-            <br>
+    <br>
 
-            <button
-                type="button"
-                disabled
-                style="
-                    padding:12px 20px;
-                    border:none;
-                    border-radius:8px;
-                    background:#4353ff;
-                    color:white;
-                    cursor:not-allowed;
-                "
-            >
-                Bayar Sekarang
-            </button>
+    <button
+        type="button"
+        id="pay-button"
+        style="
+            padding:12px 20px;
+            border:none;
+            border-radius:8px;
+            background:#4353ff;
+            color:white;
+            cursor:pointer;
+        "
+    >
+        Bayar Sekarang
+    </button>
 
-            <p style="margin-top:10px;color:#6b7280;">
-                Tombol pembayaran akan kita hubungkan
-                ke Midtrans pada tahap berikutnya.
-            </p>
-
-        @endif
+    @endif
 
     </div>
 
 </div>
+
+@if ($booking->payment_status === 'pending')
+
+<script>
+    document
+        .getElementById('pay-button')
+        .addEventListener('click', async function () {
+
+            const button = this;
+
+            button.disabled = true;
+            button.innerText = 'Memproses...';
+
+            try {
+
+                const response = await fetch(
+                    "{{ route(
+                        'student.bookings.payment.token',
+                        $booking
+                    ) }}"
+                );
+
+               const rawText = await response.text();
+
+                // buang karakter apapun sebelum '{' pertama (mis. komentar HTML nyasar)
+                const jsonStart = rawText.indexOf('{');
+                const cleanJson = jsonStart >= 0 ? rawText.slice(jsonStart) : rawText;
+
+                const data = JSON.parse(cleanJson);
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                        'Gagal membuat pembayaran.'
+                    );
+                }
+
+                window.snap.pay(
+                    data.snap_token,
+                    {
+                        onSuccess: function (result) {
+
+                            window.location.reload();
+                        },
+
+                        onPending: function (result) {
+
+                            window.location.reload();
+                        },
+
+                        onError: function (result) {
+
+                            alert(
+                                'Pembayaran gagal.'
+                            );
+
+                            button.disabled = false;
+                            button.innerText =
+                                'Bayar Sekarang';
+                        },
+
+                        onClose: function () {
+
+                            button.disabled = false;
+                            button.innerText =
+                                'Bayar Sekarang';
+                        }
+                    }
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    'Terjadi kesalahan.'
+                );
+
+                button.disabled = false;
+                button.innerText =
+                    'Bayar Sekarang';
+            }
+
+        });
+</script>
+
+@endif
 
 </body>
 

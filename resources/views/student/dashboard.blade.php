@@ -1,5 +1,5 @@
 @php($active = 'dashboard')
-@extends('layouts.app')
+@extends('layouts.app2')
 
 @section('title', 'Owner Dashboard - LuxHome')
 @section('page-title', 'Dashboard')
@@ -59,14 +59,6 @@
             @csrf
             <button type="submit">Logout</button>
         </form>
-
-        <a href="{{ route('student.kosts.index') }}">
-    Cari Kost
-</a>
-
-<a href="{{ route('student.bookings.index') }}">
-    Booking Saya
-</a>
     </div>
 
 @endsection

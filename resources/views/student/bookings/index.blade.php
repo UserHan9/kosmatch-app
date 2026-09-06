@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app2')
 
-<head>
-    <meta charset="UTF-8">
+@section('title', 'Booking Saya - KosMatch')
+@section('page-title', 'Booking Saya')
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Booking Saya - KosMatch</title>
-</head>
-
-<body>
+@section('content')
 
 <div style="max-width:1000px;margin:40px auto;font-family:Arial;">
 
@@ -109,6 +100,4 @@
 
 </div>
 
-</body>
-
-</html>
+@endsection
