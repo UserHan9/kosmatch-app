@@ -20,6 +20,8 @@ use App\Http\Controllers\ChatController;
 |--------------------------------------------------------------------------
 */
 
+
+
 Route::middleware('auth')->group(function () {
 
     Route::get(
@@ -104,6 +106,9 @@ Route::middleware(['auth', 'role:student'])
 
         Route::post('/student/bantuan/send', [SupportChatController::class, 'send'])
             ->name('student.support.send');
+        
+        Route::get('/chat', [ChatController::class, 'index'])
+            ->name('student.chat.index');
 
 
         // ini midtrans token
@@ -123,23 +128,20 @@ Route::middleware(['auth', 'role:owner'])
        
         Route::get('/dashboard', [OwnerDashboardController::class, 'index'])
             ->name('dashboard');
-
-
         
         Route::resource('kosts', KostController::class);
 
-
-        
         Route::resource('kosts.rooms', RoomController::class)
             ->except(['show']);
-
-
         
         Route::get('/bookings', [OwnerBookingController::class, 'index'])
             ->name('bookings.index');
 
         Route::get('/bookings/{booking}', [OwnerBookingController::class, 'show'])
             ->name('bookings.show');
+
+        Route::get('/chat', [ChatController::class, 'ownerIndex'])
+            ->name('chat.index');
     });
 
 

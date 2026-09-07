@@ -1,4 +1,4 @@
-@extends('layouts.app2')
+@extends(auth()->user()->role === 'owner' ? 'layouts.app' : 'layouts.app2')
 
 @section('title', 'Chat - ' . $conversation->kost->name)
 @section('page-title', 'Chat')
@@ -16,7 +16,7 @@
     "
 >
 
-    {{-- HEADER --}}
+   
     <div
         style="
             padding:20px;
@@ -48,7 +48,7 @@
     </div>
 
 
-    {{-- MESSAGES --}}
+   
     <div
         id="messages"
         style="
@@ -108,7 +108,7 @@
     </div>
 
 
-    {{-- FORM --}}
+   
     <form
         id="chat-form"
         style="
@@ -170,7 +170,7 @@ const input =
 let lastMessageId = 0;
 
 
-// Ambil ID pesan terakhir
+
 const existingMessages =
     document.querySelectorAll('.message');
 
@@ -185,7 +185,7 @@ if (existingMessages.length > 0) {
 }
 
 
-// Scroll ke bawah
+
 function scrollToBottom()
 {
     messagesContainer.scrollTop =
@@ -196,7 +196,7 @@ function scrollToBottom()
 scrollToBottom();
 
 
-// Escape HTML
+
 function escapeHtml(text)
 {
     const div =
@@ -208,10 +208,26 @@ function escapeHtml(text)
 }
 
 
-// Tambahkan pesan baru
+
+async function safeJson(response)
+{
+    const rawText = await response.text();
+
+    const jsonStart = rawText.indexOf('{');
+
+    const cleanJson =
+        jsonStart >= 0
+            ? rawText.slice(jsonStart)
+            : rawText;
+
+    return JSON.parse(cleanJson);
+}
+
+
+
 function addMessage(message)
 {
-    // Jangan tambah kalau sudah ada
+   
     if (
         document.querySelector(
             `.message[data-id="${message.id}"]`
@@ -268,7 +284,7 @@ function addMessage(message)
 }
 
 
-// Ambil pesan baru
+
 async function fetchMessages()
 {
     try {
@@ -289,9 +305,8 @@ async function fetchMessages()
         let data;
 
         try {
-            data = await response.json();
+            data = await safeJson(response);
         } catch (parseError) {
-            // Bukan JSON valid (mis. HTML error page), skip saja
             console.warn('Response bukan JSON, dilewati.');
             return;
         }
@@ -313,7 +328,7 @@ async function fetchMessages()
 }
 
 
-// Kirim pesan
+
 form.addEventListener(
     'submit',
     async function(event) {
@@ -363,7 +378,7 @@ form.addEventListener(
             let data;
 
             try {
-                data = await response.json();
+                data = await safeJson(response);
             } catch (parseError) {
                 throw new Error(
                     'Server mengembalikan respons tidak valid (bukan JSON). Cek log Laravel.'
@@ -401,7 +416,7 @@ form.addEventListener(
 );
 
 
-// POLLING
+
 setInterval(
     fetchMessages,
     2000

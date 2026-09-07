@@ -15,13 +15,11 @@ class MidtransController extends Controller
      */
     public function createSnapToken(Booking $booking)
     {
-        // Pastikan booking milik Student yang sedang login
         abort_unless(
             $booking->user_id === auth()->id(),
             403
         );
 
-        // Jangan membuat token ulang jika sudah ada
         if ($booking->snap_token) {
             return response()->json([
                 'snap_token' => $booking->snap_token,
@@ -99,9 +97,7 @@ class MidtransController extends Controller
     }
 
 
-    /**
-     * Webhook / Notification Midtrans.
-     */
+   
     public function notification(Request $request)
     {
         Config::$serverKey = config(
@@ -143,9 +139,7 @@ class MidtransController extends Controller
             }
 
 
-            /*
-             * SUCCESS
-             */
+
             if (
                 $transactionStatus === 'settlement'
                 ||
@@ -168,9 +162,7 @@ class MidtransController extends Controller
             }
 
 
-            /*
-             * PENDING
-             */
+
             elseif (
                 $transactionStatus === 'pending'
             ) {
@@ -199,9 +191,7 @@ class MidtransController extends Controller
             }
 
 
-            /*
-             * FAILED / DENIED
-             */
+           
             elseif (
                 in_array(
                     $transactionStatus,

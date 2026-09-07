@@ -2,7 +2,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Booking - LuxHome')
+@section('title', 'Booking - KosMatch')
 
 @section('page-title', 'Booking')
 

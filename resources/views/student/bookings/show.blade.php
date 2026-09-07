@@ -159,7 +159,6 @@
 
                const rawText = await response.text();
 
-                // buang karakter apapun sebelum '{' pertama (mis. komentar HTML nyasar)
                 const jsonStart = rawText.indexOf('{');
                 const cleanJson = jsonStart >= 0 ? rawText.slice(jsonStart) : rawText;
 

@@ -10,7 +10,7 @@
     >
 
     <title>
-        @yield('title', 'LuxHome')
+        @yield('title', 'KosMatch')
     </title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -216,7 +216,7 @@
     <aside class="sidebar">
         <div class="sidebar-logo">
             <span class="logo-icon"><i class="fa-solid fa-house"></i></span>
-            <span>LuxHome</span>
+            <span>KostMatch</span>
         </div>
 
         <ul class="sidebar-nav">
@@ -255,13 +255,15 @@
                     <i class="fa-solid fa-gear"></i> Custome Service
                 </a>
             </li>
-             /* <li>
-                <a href="{{ route('student.support.index') }}"
-                    class="{{ request()->routeIs('student.support.index*') ? 'active' : '' }}"
+
+             <li>
+                <a
+                    href="{{ route('student.chat.index') }}"
+                    class="{{ request()->routeIs('chat.*') ? 'active' : '' }}"
                 >
-                    <i class="fa-solid fa-gear"></i> Custome Service
+                     <i class="fa-solid fa-comments"></i> Customer Chat
                 </a>
-            </li> */
+            </li>
         </ul>
     </aside>
 

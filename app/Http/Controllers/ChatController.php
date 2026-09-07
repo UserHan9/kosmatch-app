@@ -137,4 +137,67 @@ class ChatController extends Controller
             'message' => $message,
         ]);
     }
+
+    /**
+     * Daftar percakapan milik student yang sedang login.
+     */
+    public function index()
+    {
+        $user = Auth::user();
+
+        abort_unless(
+            $user->role === 'student',
+            403
+        );
+
+        $conversations = Conversation::with([
+            'owner',
+            'kost',
+        ])
+            ->where('student_id', $user->id)
+            ->withCount([
+                'messages as unread_count' => function ($query) use ($user) {
+                    $query
+                        ->where('sender_id', '!=', $user->id)
+                        ->where('is_read', false);
+                }
+            ])
+            ->latest('updated_at')
+            ->get();
+
+        return view(
+            'chat.index',
+            compact('conversations')
+        );
+    }
+
+    public function ownerIndex()
+{
+    $user = Auth::user();
+
+    abort_unless(
+        $user->role === 'owner',
+        403
+    );
+
+    $conversations = Conversation::with([
+        'student',
+        'kost',
+    ])
+        ->where('owner_id', $user->id)
+        ->withCount([
+            'messages as unread_count' => function ($query) use ($user) {
+                $query
+                    ->where('sender_id', '!=', $user->id)
+                    ->where('is_read', false);
+            }
+        ])
+        ->latest('updated_at')
+        ->get();
+
+    return view(
+        'owner.chat.index',
+        compact('conversations')
+    );
+}
 }

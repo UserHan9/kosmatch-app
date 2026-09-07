@@ -79,7 +79,7 @@
 
       <!-- right side -->
       <div class="relative">
-        <img src="{{ asset('images/image.jpg') }}" alt="img" class="w-[400px] h-full hidden rounded-r-2xl md:block object-cover" />
+        <img src="{{ asset('images/hitam.jpg') }}" alt="img" class="w-[400px] h-full hidden rounded-r-2xl md:block object-cover" />
         <div
           class="absolute hidden bottom-10 right-6 p-6 bg-white bg-opacity-30 backdrop-blur-sm rounded drop-shadow-lg md:block"
         >

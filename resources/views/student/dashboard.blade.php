@@ -1,7 +1,7 @@
 @php($active = 'dashboard')
 @extends('layouts.app2')
 
-@section('title', 'Owner Dashboard - LuxHome')
+@section('title', 'Owner Dashboard - KosMatch')
 @section('page-title', 'Dashboard')
 
 @section('styles')
