@@ -22,6 +22,10 @@ class Kost extends Model
         'gender_type',
         'status',
     ];
+    public function conversations(): HasMany
+    {
+    return $this->hasMany(Conversation::class);
+    }
 
     public function owner(): BelongsTo
     {

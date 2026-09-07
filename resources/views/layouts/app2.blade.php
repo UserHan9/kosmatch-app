@@ -249,10 +249,19 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="{{ ($active ?? '') === 'settings' ? 'active' : '' }}">
-                    <i class="fa-solid fa-gear"></i> Settings
+                <a href="{{ route('student.support.index') }}"
+                    class="{{ request()->routeIs('student.support.index*') ? 'active' : '' }}"
+                >
+                    <i class="fa-solid fa-gear"></i> Custome Service
                 </a>
             </li>
+             /* <li>
+                <a href="{{ route('student.support.index') }}"
+                    class="{{ request()->routeIs('student.support.index*') ? 'active' : '' }}"
+                >
+                    <i class="fa-solid fa-gear"></i> Custome Service
+                </a>
+            </li> */
         </ul>
     </aside>
 

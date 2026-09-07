@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
+
 #[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -40,4 +41,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function studentConversations(): HasMany
+        {
+            return $this->hasMany(
+                Conversation::class,
+                'student_id'
+            );
+        }
+
+        public function ownerConversations(): HasMany
+        {
+            return $this->hasMany(
+                Conversation::class,
+                'owner_id'
+            );
+        }
+
+        public function sentMessages(): HasMany
+        {
+            return $this->hasMany(
+                Message::class,
+                'sender_id'
+            );
+        }
 }

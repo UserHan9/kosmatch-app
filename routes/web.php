@@ -10,7 +10,38 @@ use App\Http\Controllers\StudentKostController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\OwnerBookingController;
 use App\Http\Controllers\OwnerDashboardController;
+use App\Http\Controllers\SupportChatController;
+use App\Http\Controllers\ChatController;
 
+
+/*
+|--------------------------------------------------------------------------
+| CHAT
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/chat/kost/{kost}',
+        [ChatController::class, 'start']
+    )->name('chat.start');
+
+    Route::get(
+        '/chat/{conversation}',
+        [ChatController::class, 'show']
+    )->name('chat.show');
+
+    Route::get(
+        '/chat/{conversation}/messages',
+        [ChatController::class, 'messages']
+    )->name('chat.messages');
+
+    Route::post(
+        '/chat/{conversation}/message',
+        [ChatController::class, 'send']
+    )->name('chat.send');
+});
 
 
 
@@ -67,6 +98,12 @@ Route::middleware(['auth', 'role:student'])
 
         Route::get('/student/bookings/{booking}', [BookingController::class, 'show'])
             ->name('student.bookings.show');
+
+        Route::get('/student/bantuan', [SupportChatController::class, 'index'])
+            ->name('student.support.index');
+
+        Route::post('/student/bantuan/send', [SupportChatController::class, 'send'])
+            ->name('student.support.send');
 
 
         // ini midtrans token

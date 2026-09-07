@@ -223,6 +223,20 @@
 <div class="container">
 
     <a
+    href="{{ route('chat.start', $kost) }}"
+    style="
+        display:inline-block;
+        padding:12px 20px;
+        background:#111827;
+        color:white;
+        border-radius:8px;
+        text-decoration:none;
+    "
+>
+    💬 Chat Owner
+</a>
+
+    <a
         href="{{ route('student.kosts.index') }}"
         class="back"
     >
